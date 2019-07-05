@@ -40,20 +40,12 @@ model_svr.fit(x_trains,y_trains.ravel())
 y_pred= model_svr.predict(x_tests)
 print("Root Mean Squared Error is {}".format(np.sqrt(metrics.mean_squared_error(y_tests,y_pred))))
 
-# calculating the mean of the latitudes 
-# and longitudes of the locations of volcanoes 
 latmean=df['latitude'].mean() 
 lonmean=df['longitude'].mean() 
   
-# Creating a map object using Map() function. 
-# Location parameter takes latitudes and 
-# longitudes as starting location. 
-# (Map will be centered at those co-ordinates)  
-map5 = folium.Map(location=[latmean,lonmean], 
+ map5 = folium.Map(location=[latmean,lonmean], 
         zoom_start=6,tiles = 'Mapbox bright') 
           
-# Function to change the marker color  
-# according to the elevation of volcano 
 def color(value): 
     if value in range(0,149999): 
         col = 'green'
@@ -65,13 +57,9 @@ def color(value):
         col='red'
     return col 
       
-# Iterating over longitude and latitude with median_house_value
 for lat,lan,value in zip(df_test['latitude'],df_test['longitude'],df_test['median_house_value']): 
-    # Marker() takes location coordinates  
-    # as a list as an argument 
     folium.Marker(location=[lat,lan], 
                   icon= folium.Icon(color=color(value), 
                   icon_color='black',icon = 'home')).add_to(map5) 
                     
-# Save the file created above 
 print(map5.save('finally.html'))
