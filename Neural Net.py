@@ -28,12 +28,11 @@ x.describe()
 
 from sklearn.model_selection import train_test_split
 df_train,df_test=train_test_split(df,test_size=0.15)
-
 x_norm = (x-x.mean())/x.std()
-n_cols = x_norm.shape[1]
 
 from sklearn.model_selection import train_test_split
 x_train,x_test,y_train,y_test=train_test_split(x_norm,y,test_size=0.17)
+n_cols = x_train.shape[1]
 
 def my_model():
     model = Sequential()
