@@ -12,6 +12,7 @@ from sklearn import metrics,preprocessing
 import folium
 from keras.layers import Dense
 from keras.models import Sequential
+from matplotlib import pyplot
 df=pd.read_csv('housing1.csv')
 
 from sklearn.preprocessing import LabelEncoder
@@ -31,9 +32,10 @@ from sklearn.model_selection import train_test_split
 df_train,df_test=train_test_split(df,test_size=0.15)
 
 x_norm = (predictors-predictors.mean())/predictors.std()
+y_norm = (target-target.mean())/target.std()
 
 from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test=train_test_split(x_norm,y,test_size=0.20)
+x_train,x_test,y_train,y_test=train_test_split(x_norm,y_norm,test_size=0.20)
 n_cols = x_train.shape[1]
 
 def my_model():
@@ -45,10 +47,16 @@ def my_model():
     return model
 
 model = my_model()
-model.fit(x_train,y_train,validation_data=(x_test,y_test),verbose=2,epochs=50)
+history = model.fit(x_train,y_train,validation_data=(x_test,y_test),verbose=2,epochs=50)
     
-y_pred= model.predict(x_test)
+y_pred = model.predict(x_test)
 print("Root Mean Squared Error is {}".format(np.sqrt(metrics.mean_squared_error(y_test,y_pred))))
+
+pyplot.title('Loss / Mean Squared Error')
+pyplot.plot(history.history['loss'], label='train')
+pyplot.plot(history.history['val_loss'], label='test')
+pyplot.legend()
+pyplot.show()
 
 latmean=df['latitude'].mean() 
 lonmean=df['longitude'].mean() 
