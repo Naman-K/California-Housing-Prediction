@@ -19,19 +19,21 @@ number=LabelEncoder()
 df['ocean_proximity']=number.fit_transform(df['ocean_proximity'].astype('str'))
 
 df['num_rooms'] = df['total_rooms'] / df['households']
+data = df.columns
+predictors = df[data[data != 'median_house_value']]
+target = df['median_house_value']
 
-x=df.iloc[:,:-1]
-y=df.iloc[:,-1]
-x.fillna(x.mean(), inplace=True)
-x.info()
-x.describe()
+predictors.fillna(predictors.mean(), inplace=True)
+predictors.info()
+predictors.describe()
 
 from sklearn.model_selection import train_test_split
 df_train,df_test=train_test_split(df,test_size=0.15)
-x_norm = (x-x.mean())/x.std()
+
+x_norm = (predictors-predictors.mean())/predictors.std()
 
 from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test=train_test_split(x_norm,y,test_size=0.17)
+x_train,x_test,y_train,y_test=train_test_split(x_norm,y,test_size=0.20)
 n_cols = x_train.shape[1]
 
 def my_model():
@@ -43,7 +45,7 @@ def my_model():
     return model
 
 model = my_model()
-model.fit(x_train,y_train,validation_split=0.17,verbose=2,epochs=49)
+model.fit(x_train,y_train,validation_data=(x_test,y_test),verbose=2,epochs=50)
     
 y_pred= model.predict(x_test)
 print("Root Mean Squared Error is {}".format(np.sqrt(metrics.mean_squared_error(y_test,y_pred))))
