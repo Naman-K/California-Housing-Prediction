@@ -19,7 +19,6 @@ from sklearn.preprocessing import LabelEncoder
 number=LabelEncoder()
 df['ocean_proximity']=number.fit_transform(df['ocean_proximity'].astype('str'))
 
-df['num_rooms'] = df['total_rooms'] / df['households']
 data = df.columns
 predictors = df[data[data != 'median_house_value']]
 target = df['median_house_value']
